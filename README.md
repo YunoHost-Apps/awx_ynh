@@ -6,7 +6,8 @@ AWX
 - [Yunohost project](https://yunohost.org)
 - [AWX website](https://github.com/ansible/awx)
 
-![](https://raw.githubusercontent.com/ansible/awx-logos/master/awx/ui/client/assets/logo-login.svg?sanitize=true)
+
+<img src="https://raw.githubusercontent.com/ansible/awx-logos/master/awx/ui/client/assets/logo-login.svg?sanitize=true" width=200 alt="AWX" />
 
 
 [![Install Emby with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=awx)
