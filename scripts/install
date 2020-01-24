@@ -91,8 +91,6 @@ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 2
 
 sudo pip3 install docker-compose==1.24.1
 
-
-
 #=================================================
 # FIND AND OPEN A PORT
 #=================================================
@@ -143,6 +141,8 @@ ynh_system_user_create $app
 
 cp -a ../conf/inventory $final_path/installer/inventory
 
+ansible-playbook -i $final_path/installer/inventory install.yml
+
 #=================================================
 # STORE THE CONFIG FILE CHECKSUM
 #=================================================
@@ -153,7 +153,6 @@ cp -a ../conf/inventory $final_path/installer/inventory
 
 # Calculate and store the config file checksum into the app settings
 #ynh_store_file_checksum "/etc/onlyoffice/documentserver/nginx/onlyoffice-documentserver.conf"
-
 
 #=================================================
 # GENERIC FINALIZATION
