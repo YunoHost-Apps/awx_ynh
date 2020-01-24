@@ -79,7 +79,19 @@ ynh_print_info "Installing dependencies..."
 ###		- As well as the section "REINSTALL DEPENDENCIES" in the restore script
 ###		- And the section "UPGRADE DEPENDENCIES" in the upgrade script
 
-ynh_install_app_dependencies openjdk-8-jre-headless dbconfig-common bc
+echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu bionic main" | sudo tee /etc/apt/sources.list.d/ansible.list
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+
+ynh_install_app_dependencies gnupg2 absible python3-pip git pwgen vim  python3-docker nodejs npm
+
+sudo npm install npm --global
+
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 2
+
+sudo pip3 install docker-compose==1.24.1
+
+
 
 #=================================================
 # FIND AND OPEN A PORT
@@ -91,10 +103,10 @@ ynh_install_app_dependencies openjdk-8-jre-headless dbconfig-common bc
 ###		- Remove the section "CLOSE A PORT" in the remove script
 
 # Find a free port
-port=$(ynh_find_port 8080)
+#port=$(ynh_find_port 8080)
 # Open this port
-yunohost firewall allow --no-upnp TCP $port 2>&1
-ynh_app_setting_set $app port $port
+#yunohost firewall allow --no-upnp TCP $port 2>&1
+#ynh_app_setting_set $app port $port
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -108,26 +120,8 @@ ynh_setup_source "$final_path"
 # SETUP SYSTEMD
 #=================================================
 
-ynh_add_systemd_config
-systemctl enable $app.service
-
-#=================================================
-# CREATE A MYSQL DATABASE
-#=================================================
-ynh_print_info "Creating a MySQL database..."
-
-### Use these lines if you need a database for the application.
-### `ynh_mysql_setup_db` will create a database, an associated user and a ramdom password.
-### The password will be stored as 'mysqlpwd' into the app settings,
-### and will be available as $db_pwd
-### If you're not using these lines:
-###		- Remove the section "BACKUP THE MYSQL DATABASE" in the backup script
-###		- Remove also the section "REMOVE THE MYSQL DATABASE" in the remove script
-###		- As well as the section "RESTORE THE MYSQL DATABASE" in the restore script
-
-db_name=$(ynh_sanitize_dbid $app)
-ynh_app_setting_set $app db_name $db_name
-ynh_mysql_setup_db $db_name $db_name
+#ynh_add_systemd_config
+#systemctl enable $app.service
 
 #=================================================
 # NGINX CONFIGURATION
@@ -146,13 +140,8 @@ ynh_system_user_create $app
 #=================================================
 # MODIFY A CONFIG FILE
 #=================================================
-cp -a ../conf/startup.sh $final_path/bin/startup.sh
 
-ynh_replace_string "yunouser"   "$db_name"    "$final_path/bin/startup.sh"
-ynh_replace_string "yunopass"   "$db_pwd"     "$final_path/bin/startup.sh"
-ynh_replace_string "yunobase"   "$db_name"    "$final_path/bin/startup.sh"
-
-ynh_mysql_execute_file_as_root --file="../conf/mysql.sql" --database="$db_name"
+cp -a ../conf/inventory $final_path/installer/inventory
 
 #=================================================
 # STORE THE CONFIG FILE CHECKSUM
@@ -177,10 +166,8 @@ ynh_mysql_execute_file_as_root --file="../conf/mysql.sql" --database="$db_name"
 ### that really need such authorization.
 
 # Set permissions to app files
-chmod +x  $final_path/bin/startup.sh
 chown -R $app: $final_path
 #chown -R admin:1007 $final_path
-
 
 #=================================================
 # SETUP SSOWAT
@@ -193,5 +180,4 @@ if [ $is_public -eq 1 ]; then
 fi
 
 # Reload services
-systemctl start $app.service
 systemctl reload nginx
