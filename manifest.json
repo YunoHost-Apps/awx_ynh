@@ -1,0 +1,58 @@
+{
+    "name": "AWX",
+    "id": "awx",
+    "packaging_format": 1,
+    "description": {
+        "en": "AWX package for YunoHost.",
+        "fr": "AWX pour YunoHost."
+    },
+    "version": "9.1.1",
+    "url": "https://github.com/ansible/awx",
+    "license": "Apache 2",
+    "maintainer": {
+        "name": "liberodark",
+        "email": "liberodark@gmail.com"
+    },
+    "requirements": {
+        "yunohost": ">= 2.7.2"
+    },
+    "multi_instance": false,
+    "services": [
+        "nginx",
+        "php5-fpm",
+        "mysql"
+    ],
+    "arguments": {
+        "install": [{
+                "name": "domain",
+                "type": "domain",
+                "ask": {
+                    "en": "Choose a domain name for AWX",
+                    "fr": "Choisissez un nom de domaine pour AWX"
+                },
+                "example": "example.com"
+            },
+
+            {
+                "name": "path",
+                "type": "path",
+                "ask": {
+                    "en": "Choose a path for AWX /awx is accepted",
+                    "fr": "Choisissez un chemin pour AWX /awx est accepté"
+                },
+                "example": "/awx",
+                "default": "/awx"
+            },
+            
+            {
+                "name": "is_public",
+                "type": "boolean",
+                "ask": {
+                    "en": "Is it a public site ?",
+                    "fr": "Est-ce un site public ?"
+                },
+                "default": "true"
+            }
+        ]
+    }
+}

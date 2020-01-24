@@ -1,0 +1,16 @@
+[Unit]
+Description=squash-tm
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/squash-tm/
+User=squash-tm
+Group=users
+Type=simple
+UMask=000
+ExecStart=/opt/squash-tm/bin/startup.sh
+RestartSec=60
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
